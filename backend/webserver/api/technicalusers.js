@@ -1,9 +1,37 @@
 const authorizationMW = require('../middleware/authorization');
+const platformAdminMW = require('../middleware/platformadmins');
 const domainMW = require('../middleware/domain');
 const controller = require('../controllers/technicalusers');
 const technicalUserMW = require('../middleware/technicaluser');
 
 module.exports = router => {
+
+  /**
+   * @swagger
+   * /technicalusers:
+   *   get:
+   *     tags:
+   *      - TechnicalUser
+   *     description: |
+   *       List all technical users on the platform.
+   *     parameters:
+   *       - $ref: "#/parameters/cm_limit"
+   *       - $ref: "#/parameters/cm_offset"
+   *     responses:
+   *       200:
+   *         $ref: "#/responses/tu_technicalusers_list"
+   *       401:
+   *         $ref: "#/responses/cm_401"
+   *       403:
+   *         $ref: "#/responses/cm_403"
+   *       500:
+   *         $ref: "#/responses/cm_500"
+   */
+  router.get('/technicalusers',
+    authorizationMW.requiresAPILogin,
+    platformAdminMW.requirePlatformAdmin,
+    controller.listAll);
+
   /**
    * @swagger
    * /domains/{domain_id}/technicalusers:

@@ -61,7 +61,7 @@ function list(options, callback) {
     findOptions.domain = options.domainId;
   }
 
-  let query = TechnicalUser.find(findOptions);
+  let query = options.isPopulated ? TechnicalUser.find(findOptions).populate('domain', 'name') : TechnicalUser.find(findOptions);
 
   if (options.offset > 0) {
     query = query.skip(+options.offset);

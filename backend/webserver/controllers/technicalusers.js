@@ -7,17 +7,42 @@ const DEFAULT_OFFSET = 0;
 const DEFAULT_LIMIT = 50;
 
 module.exports = {
+  listAll,
   list,
   create,
   update,
   remove
 };
 
+function listAll(req, res) {
+  const options = {
+    isPopulated: true,
+    offset: +req.query.offset || DEFAULT_OFFSET,
+    limit: +req.query.limit || DEFAULT_LIMIT
+  };
+
+  promisify(coreTechnicalUsers.list)(options)
+    .then(technicalUsers => res.status(200).json(technicalUsers))
+    .catch(err => {
+      const details = 'Error while finding all technical users';
+      logger.error(details, err);
+
+      return res.status(500).json({
+        error: {
+          code: 500,
+          message: 'Server Error',
+          details
+        }
+      });
+    });
+}
+
 function list(req, res) {
   const domainId = req.params.uuid;
 
   const options = {
     domainId,
+    isPopulated: false,
     offset: +req.query.offset || DEFAULT_OFFSET,
     limit: +req.query.limit || DEFAULT_LIMIT
   };
