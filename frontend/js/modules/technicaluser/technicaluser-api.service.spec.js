@@ -55,4 +55,18 @@ describe('The esnTechnicalUserAPIClient service', function() {
         $httpBackend.flush();
       });
     });
+
+    describe('The listAll function', function() {
+      it('should send a request to /api/technicalusers', function() {
+        var options = {
+          offset: 5,
+          limit: 30
+        };
+
+        $httpBackend.expectGET('/api/technicalusers?limit=' + options.limit + '&offset=' + options.offset).respond(200, []);
+
+        esnTechnicalUserAPIClient.listAll(options);
+        $httpBackend.flush();
+      });
+    });
 });
